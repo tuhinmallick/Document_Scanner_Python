@@ -109,19 +109,24 @@ def crop_image():
     global cropping, crop_c, launch, scanned_imgs
     launch = True
     repn = Path('Cropped_image')
-    if repn.is_dir():
-        pass
-    else:
+    if not repn.is_dir():
         os.mkdir('Cropped_image')
     crop_c += 1
 
     img1 = img.copy()
     img1 = cv2.cvtColor(np.asarray(img1), cv2.COLOR_RGB2BGR)
-    cn = './Cropped_image/img_' + str(crop_c) + '.jpg'
+    cn = f'./Cropped_image/img_{crop_c}.jpg'
     cv2.imwrite(cn, img1)
 
-    imlab2 = tk.Label(windo, text="Orignal: "+ cn[16:], width=22, height=1, fg="black", bg="yellow",
-                     font=('times', 15, ' bold '))
+    imlab2 = tk.Label(
+        windo,
+        text=f"Orignal: {cn[16:]}",
+        width=22,
+        height=1,
+        fg="black",
+        bg="yellow",
+        font=('times', 15, ' bold '),
+    )
     imlab2.place(x=430, y=140)
 
     imageFrame2 = tk.Frame(windo)
@@ -146,16 +151,21 @@ def crop_image():
     t = threshold_local(imgr, 17, offset=15, method='gaussian')
     imgr = (imgr > t).astype('uint8') * 255
     repn = Path('Processed_image')
-    if repn.is_dir():
-        pass
-    else:
+    if not repn.is_dir():
         os.mkdir('Processed_image')
-    cn1 = './Processed_image/img_' + str(crop_c) + '.jpg'
+    cn1 = f'./Processed_image/img_{crop_c}.jpg'
     cv2.imwrite(cn1,imgr)
     scanned_imgs.append(cn1)
     print(scanned_imgs)
-    imlab4 = tk.Label(windo, text="Scanned: "+ cn[16:], width=22, height=1, fg="white", bg="black",
-                     font=('times', 15, ' bold '))
+    imlab4 = tk.Label(
+        windo,
+        text=f"Scanned: {cn[16:]}",
+        width=22,
+        height=1,
+        fg="white",
+        bg="black",
+        font=('times', 15, ' bold '),
+    )
     imlab4.place(x=730, y=140)
 
     imageFrame4 = tk.Frame(windo)
@@ -191,9 +201,7 @@ def pdf_gen():
 
         ## Generate folder for PDF
         repn = Path('Scanned_PDF')
-        if repn.is_dir():
-            pass
-        else:
+        if not repn.is_dir():
             os.mkdir('Scanned_PDF')
 
         ## Create First Intro page
@@ -213,7 +221,11 @@ def pdf_gen():
         ts = time.time()
         timeStam = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
         Hour, Minute, Second = timeStam.split(":")
-        img.save('./Scanned_PDF/Scanned_'+str(pdf_c)+'_'+str(Hour)+'_'+str(Minute)+'_'+str(Second)+'.pdf',save_all=True, append_images=image_list)
+        img.save(
+            f'./Scanned_PDF/Scanned_{pdf_c}_{str(Hour)}_{str(Minute)}_{str(Second)}.pdf',
+            save_all=True,
+            append_images=image_list,
+        )
         # img.save('./Scanned_PDF/Scanned_'+str(pdf_c)+'.pdf',save_all=True, append_images=image_list)
         noti = tk.Label(windo, text='PDF Generated!!', width=20, height=1, fg="black", bg="spring green",
                         font=('times', 13, ' bold '))
